@@ -6,5 +6,3 @@ import           API
 
 main :: IO ()
 main = runServer
-
-test = print "Hello 1"
