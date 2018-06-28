@@ -1,0 +1,79 @@
+name:                searchengine
+version:             0.1.0.0
+github:              "checkraiser/searchengine"
+license:             BSD3
+author:              "Truong Dung"
+maintainer:          "checkraiser11@gmail.comm"
+copyright:           "MIT"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/checkraiser/searchengine#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- wreq
+- lens
+- lens-aeson
+- bytestring
+- text
+- containers
+- tagsoup
+- raw-strings-qq
+- utf8-string
+- taggy-lens
+- persistent
+- persistent-template
+- persistent-postgresql
+- monad-logger
+- mtl
+- aeson
+- transformers
+library:
+  source-dirs: src
+
+executables:
+  searchengine-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - searchengine
+  searchengine-web:
+    main:                Main.hs
+    source-dirs:         web
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - searchengine
+    - servant
+    - servant-server
+    - wai
+    - warp
+    - servant-client
+    - wai-logger
+
+tests:
+  searchengine-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - searchengine
