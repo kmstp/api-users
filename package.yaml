@@ -38,6 +38,7 @@ dependencies:
 - mtl
 - aeson
 - transformers
+- exceptions
 library:
   source-dirs: src
 

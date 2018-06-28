@@ -9,7 +9,10 @@ import           Control.Monad.Reader        (runReaderT)
 import           Database.Persist.Postgresql (ConnectionString, SqlPersistT,
                                               runMigration, withPostgresqlConn)
 
+import           Control.Exception           (SomeException)
+import           Control.Monad.Catch
 import           Data.Int
+import           Data.Text
 import           Database.Persist            (Entity, SelectOpt (..),
                                               selectList, (<.), (==.))
 import           Database.Persist.Sql
@@ -55,8 +58,11 @@ sampleUser = User
 fetchUserPG :: ConnectionString -> Int64 -> IO (Maybe User)
 fetchUserPG connString uid = runAction connString (get (toSqlKey uid))
 
-createUserPG :: ConnectionString -> User -> IO Int64
-createUserPG connString user = fromSqlKey <$> runAction connString (insert user)
+type DbError = Text
+
+createUserPG :: ConnectionString -> User -> IO (Either DbError Int64)
+createUserPG connString user = runAction connString $
+  (Right . fromSqlKey <$> insert user) `catch` (\(SomeException _) -> return $ Left "Db Error")
 
 deleteUserPG :: ConnectionString -> Int64 -> IO ()
 deleteUserPG connString uid = runAction connString (delete userKey)

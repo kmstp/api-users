@@ -40,7 +40,13 @@ fetchUsersHandler connString uid = do
                $ err401 { errBody = "Could not find user with that ID" }
 
 createUserHandler :: ConnectionString -> User -> Handler Int64
-createUserHandler connString user = liftIO $ createUserPG connString user
+createUserHandler connString user = do
+  newUserId <- liftIO $ createUserPG connString user
+  case newUserId of
+    Right uid -> return uid
+    Left _ -> Handler
+              $ throwE
+              $ err401 { errBody = "Could not create user with that information" }
 
 usersServer :: ConnectionString -> Server UsersAPI
 usersServer connString =
