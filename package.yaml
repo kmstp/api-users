@@ -42,9 +42,9 @@ library:
   source-dirs: src
 
 executables:
-  searchengine-exe:
+  searchengine-cli:
     main:                Main.hs
-    source-dirs:         app
+    source-dirs:         cli
     ghc-options:
     - -threaded
     - -rtsopts
