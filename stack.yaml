@@ -43,6 +43,9 @@ extra-deps:
 - taggy-lens-0.1.2
 - taggy-0.2.1
 - dotgen-0.4.2
+- persistent-migration-0.0.2
+- graphql-api-0.3.0
+- miso-0.20.1.0
 # Override default flag values for local packages and extra-deps
 # flags: {}
 
