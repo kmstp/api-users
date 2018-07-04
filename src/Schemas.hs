@@ -1,21 +1,31 @@
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE GADTs                      #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE GADTs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE OverloadedStrings          #-}
-{-# LANGUAGE QuasiQuotes                #-}
-{-# LANGUAGE RecordWildCards            #-}
-{-# LANGUAGE TemplateHaskell            #-}
-{-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module Schemas
 where
 
-import           Data.Aeson          (FromJSON, Object, ToJSON, object,
-                                      parseJSON, toJSON, withObject, (.:), (.=))
-import           Data.Aeson.Types    (Pair, Parser)
-import           Data.Text
+import Data.Aeson
+    ( FromJSON
+    , Object
+    , ToJSON
+    , object
+    , parseJSON
+    , toJSON
+    , withObject
+    , (.:)
+    , (.=)
+    )
+import Data.Aeson.Types (Pair, Parser)
+import Data.Text
 import qualified Database.Persist.TH as PTH
+import Protolude
 
 PTH.share [PTH.mkPersist PTH.sqlSettings, PTH.mkMigrate "migrateAll"] [PTH.persistLowerCase|
   User sql=users

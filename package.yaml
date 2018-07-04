@@ -21,13 +21,10 @@ description:         Please see the README on GitHub at <https://github.com/chec
 
 dependencies:
 - base >= 4.7 && < 5
-- wreq
-- lens
 - lens-aeson
 - bytestring
 - text
 - containers
-- tagsoup
 - raw-strings-qq
 - utf8-string
 - taggy-lens
@@ -39,19 +36,54 @@ dependencies:
 - aeson
 - transformers
 - exceptions
+- eventstore
+- streaming
+- streaming-bytestring
+- protobuf
+- async
+- unordered-containers
+- safe-exceptions
+- hspec
+- uuid
+- email-validate
+- selda
+- safe
+- servant
+- network-uri
+- miso
+- lens
+- servant-client-core
+- servant-server
+- lucid
+- graphql-api
+- protolude
 library:
   source-dirs: src
-
+default-extensions:
+  - NoImplicitPrelude  
+  - OverloadedStrings
 executables:
-  searchengine-cli:
+  searchengine-api:
     main:                Main.hs
-    source-dirs:         cli
+    source-dirs:         api
     ghc-options:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
     - searchengine
+    - wai
+    - warp
+    - servant-client
+    - wai-logger
+    - servant-lucid
+    - lucid
+    - clay
+    - http-media
+    - wai-extra
+    - servant-docs
+    - miso
+    - http-types
   searchengine-web:
     main:                Main.hs
     source-dirs:         web
@@ -67,7 +99,13 @@ executables:
     - warp
     - servant-client
     - wai-logger
-
+    - servant-lucid
+    - lucid
+    - clay
+    - http-media
+    - wai-extra
+    - servant-docs
+    - miso
 tests:
   searchengine-test:
     main:                Spec.hs

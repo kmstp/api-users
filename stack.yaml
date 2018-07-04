@@ -35,6 +35,7 @@ resolver: lts-11.15
 #  - wai
 packages:
 - .
+- localpackages/graphql-api
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
@@ -43,6 +44,7 @@ extra-deps:
 - taggy-lens-0.1.2
 - taggy-0.2.1
 - dotgen-0.4.2
+- miso-0.20.1.0
 # Override default flag values for local packages and extra-deps
 # flags: {}
 

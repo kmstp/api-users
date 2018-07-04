@@ -1,22 +1,23 @@
-{-# LANGUAGE GADTs             #-}
+{-# LANGUAGE GADTs #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Database
 where
 
-import           Control.Monad.IO.Class      (MonadIO)
-import           Control.Monad.Logger        (LoggingT, runStdoutLoggingT)
-import           Control.Monad.Reader        (runReaderT)
-import           Database.Persist.Postgresql (ConnectionString, SqlPersistT,
-                                              runMigration, withPostgresqlConn)
+import Control.Monad.IO.Class (MonadIO)
+import Control.Monad.Logger (LoggingT, runStdoutLoggingT)
+import Control.Monad.Reader (runReaderT)
+import Database.Persist.Postgresql
+    (ConnectionString, SqlPersistT, runMigration, withPostgresqlConn)
 
-import           Control.Exception           (SomeException)
-import           Control.Monad.Catch
-import           Data.Int
-import           Data.Text
-import           Database.Persist            (Entity, SelectOpt (..),
-                                              selectList, (<.), (==.))
-import           Database.Persist.Sql
-import           Schemas
+import Control.Exception (SomeException)
+import Control.Monad.Catch
+import Data.Either
+import Data.Int
+import Data.Text
+import Database.Persist (Entity, SelectOpt(..), selectList, (<.), (==.))
+import Database.Persist.Sql
+import Protolude hiding (catch, get)
+import Schemas
 
 localConnString :: ConnectionString
 localConnString = "host=127.0.0.1 port=5432 user=macbookpro dbname=kms password=Dung123#"
@@ -24,6 +25,8 @@ localConnString = "host=127.0.0.1 port=5432 user=macbookpro dbname=kms password=
 fetchPostgresConnection :: IO ConnectionString
 fetchPostgresConnection = return localConnString
 
+
+-- Make use of PgBouncer so that we don't need to keep pool
 runAction :: ConnectionString
           -> SqlPersistT (LoggingT IO) a
           -> IO a
