@@ -16,14 +16,13 @@ import Data.Char
 import Data.Data
 import Data.Either
 import Data.Maybe
-import Data.Semigroup ((<>))
 import qualified Data.Text as T
 import GHC.Generics
 import Models.Types
+import Protolude hiding (handle)
 import Repository as Repo
 import Safe
 import Test.Hspec
-
 
 import Control.Monad.IO.Class
 import Control.Monad.Reader
@@ -150,4 +149,4 @@ test2 = exeCmd sampleCommand_ sampleUserId_
 
 
 sampleEvent = NameChanged (UserId "user-123") "Dung1"
-test = print "hello"
+test = print "hello" :: IO ()

@@ -23,9 +23,11 @@ import Data.Text.Encoding (encodeUtf8)
 import GHC.Generics
 import Models.Types
 import Models.User (UserId)
+import Protolude hiding (handle)
 import Repository as Repo
 import Test.Hspec
 import qualified Text.Email.Validate as EV
+
 ---------------------------- model ------------------------------------
 
 newtype SystemId = SystemId T.Text deriving (Generic, Eq, Show, Data, ToJSON, FromJSON, Read)
@@ -93,6 +95,7 @@ systemId_ = SystemId "system1"
 sampleSystem_ :: System
 sampleSystem_ = new systemId_
 
+test :: IO ()
 test = print $ sampleSystem_ `handle` systemCommand_
 
 

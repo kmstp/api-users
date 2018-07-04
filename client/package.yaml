@@ -1,0 +1,35 @@
+name: app
+version: '0.1.0.0'
+synopsis: First miso app
+category: Web
+license: GPL
+dependencies:
+- base
+- miso
+default-extensions:
+- NoImplicitPrelude  
+- OverloadedStrings
+executables:
+  app:
+    main: Main.hs
+    when:
+    - condition: ! '!(impl(ghcjs -any))'
+      then:
+        buildable: false
+      else:
+        source-dirs:
+        - src
+        - ../src
+        dependencies:
+        - base <5
+        - lens
+        - miso
+        - mtl
+        - transformers
+        - ghcjs-base
+        - servant
+        - network-uri
+        - text
+        - jsaddle
+        - ghcjs-base
+        - protolude

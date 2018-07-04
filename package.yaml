@@ -48,13 +48,20 @@ dependencies:
 - email-validate
 - selda
 - safe
-- graphql-api
 - servant
 - network-uri
 - miso
 - lens
+- servant-client-core
+- servant-server
+- lucid
+- graphql-api
+- protolude
 library:
   source-dirs: src
+default-extensions:
+  - NoImplicitPrelude  
+  - OverloadedStrings
 executables:
   searchengine-api:
     main:                Main.hs
@@ -65,8 +72,6 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - searchengine
-    - servant
-    - servant-server
     - wai
     - warp
     - servant-client
@@ -79,7 +84,6 @@ executables:
     - servant-docs
     - miso
     - http-types
-    - protolude
   searchengine-web:
     main:                Main.hs
     source-dirs:         web

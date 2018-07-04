@@ -16,6 +16,7 @@ import Data.Maybe
 import Data.Semigroup ((<>))
 import Data.Text
 import qualified Database.EventStore as ES
+import Protolude hiding (fromStrict)
 
 type Connection = ES.Connection
 type Credentials = ES.Credentials

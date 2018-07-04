@@ -22,12 +22,13 @@ import Database.Persist (Entity, Key)
 import Database.Persist.Postgresql (ConnectionString)
 import GraphQL
 import GraphQL.Query
-import GraphQL.Value.ToValue (toValue)
+import GraphQL.Value (toValue)
 import Lucid
 import Network.Wai.Handler.Warp
     (defaultSettings, runSettings, setLogger, setPort)
 import Network.Wai.Logger (withStdoutLogger)
 import Network.Wai.Middleware.Gzip
+import Protolude
 import Schemas (User)
 import Servant.API
 import Servant.Client
@@ -87,8 +88,8 @@ pageTemplate contents =
                       script_ [src_ "static/app.js"] ("" :: T.Text))
             body_ contents)
 
-link :: T.Text -> Html () -> Html ()
-link url  = a_ [href_ url]
+link__ :: T.Text -> Html () -> Html ()
+link__ url  = a_ [href_ url]
 
 indexHtmlHandler :: Html ()
 indexHtmlHandler =
@@ -96,7 +97,7 @@ indexHtmlHandler =
     (do h1_ "Hello!"
         p_ "Hello, Lucid!"
         p_ (do "I love!"
-               link "http://haskell.org" "Haskell!")
+               link__ "http://haskell.org" "Haskell!")
         div_ [id_ "counter"] "")
 
 app :: ConnectionString -> Application
@@ -142,3 +143,4 @@ greetDocs = docs usersAPI
 
 genDocs :: IO ()
 genDocs = putStrLn $ markdown greetDocs
+

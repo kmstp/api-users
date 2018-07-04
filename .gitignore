@@ -2,3 +2,4 @@
 searchengine.cabal
 *~
 api/static/
+localpackages/

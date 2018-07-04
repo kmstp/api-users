@@ -1,6 +1,5 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
@@ -14,20 +13,24 @@ import qualified Servant.API as Servant
 #if MIN_VERSION_servant(0,10,0)
 import qualified Servant.Utils.Links as Servant
 #endif
+import qualified Common.Button as B
 import qualified Data.Text as T
 import Miso (View)
 import qualified Miso
 import Miso.Html
 import qualified Miso.String as Miso
 import qualified Network.URI as Network
+import Protolude
+
 
 data Model
    = Model
      { _uri          :: !Network.URI
      , _counterValue :: !Int
      , _name         :: !T.Text
+     , _mLeftButton  :: !B.Model
      }
-     deriving (Eq, Show)
+     deriving (Eq)
 
 initialModel :: Network.URI -> Model
 initialModel uri =
@@ -35,6 +38,7 @@ initialModel uri =
     { _uri = uri
     , _counterValue = 0
     , _name = "Dung"
+    , _mLeftButton  = B.initialModel "Welcome, substract me"
     }
 
 data Action
@@ -78,7 +82,7 @@ homeView m =
       [ div_
         []
         [ button_ [ onClick SubtractOne ] [ text "-" ]
-        , text $ Miso.ms $ show $ _counterValue m
+        , text $ Miso.ms (show (_counterValue m) :: T.Text)
         , button_ [ onClick AddOne ] [ text "+" ]
         ]
       , button_ [ onClick $ ChangeURI flippedLink ] [ text "Go to /flipped" ]
@@ -91,7 +95,7 @@ flippedView m =
       [ div_
         []
         [ button_ [ onClick AddOne ] [ text "+" ]
-        , text $ Miso.ms $ show $ _counterValue m
+        , text $ Miso.ms (show  (_counterValue m) :: T.Text)
         , button_ [ onClick SubtractOne ] [ text "-" ]
         ]
       , button_ [ onClick $ ChangeURI homeLink ] [ text "Go to /" ]

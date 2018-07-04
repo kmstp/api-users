@@ -5,12 +5,11 @@ module GraphQL.Query
 ( RootQueryType
 , rootQuery)
 where
-import Data.Semigroup ((<>))
 import Data.Text
 import GraphQL
 import GraphQL.API ((:>), Argument, Field, Object, Union)
 import GraphQL.Resolver ((:<>)(..), Handler, unionValue)
-
+import Protolude
 {-
   type Query {
     me: User!

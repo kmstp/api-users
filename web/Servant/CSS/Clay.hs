@@ -18,6 +18,7 @@ import Data.Typeable (Typeable)
 import Servant.API (Accept(..), MimeRender(..))
 
 import qualified Network.HTTP.Media as M
+import Protolude hiding (encodeUtf8)
 
 data CSS deriving Typeable
 

@@ -1,17 +1,24 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators #-}
-
 module Main where
 
 import qualified Common
+import qualified Common.Button as B
 import Control.Lens (makeLenses, (+=), (-=), (.=), (^.))
 import Data.Proxy (Proxy(..))
+import qualified Jwt
 import Miso (App(..), View)
 import qualified Miso
 import qualified Miso.String as Miso
 import Servant.API ((:<|>)(..))
 import qualified Servant.API as Servant
 import qualified Servant.Utils.Links as Servant
+import System.IO (IO)
+import Protolude
+
+type (<-<) b a = a -> b
+infixl 0 <-<
 main :: IO ()
 main =
   Miso.miso $ \currentURI -> App
@@ -25,8 +32,7 @@ main =
     }
 
 updateModel
-    :: Common.Action
-    -> Miso.Transition Common.Action Common.Model ()
+    :: Miso.Transition Common.Action Common.Model () <-< Common.Action
 updateModel action =
     case action of
         Common.NoOp          -> pure ()
@@ -35,5 +41,6 @@ updateModel action =
         Common.ChangeURI uri ->
           Miso.scheduleIO $ do
             Miso.pushURI uri
+            Jwt.setJwtToken "test"
             pure Common.NoOp
         Common.HandleURIChange uri -> Common.uri .= uri

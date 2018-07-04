@@ -2,8 +2,10 @@
 
 module Aggregate where
 
+import Data.Either
 import Data.List
 import Data.Text (Text)
+import Protolude
 
 class AggregateId aid where
     textAggregateId :: aid -> Text

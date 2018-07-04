@@ -11,10 +11,12 @@ import Database.Persist.Postgresql
 
 import Control.Exception (SomeException)
 import Control.Monad.Catch
+import Data.Either
 import Data.Int
 import Data.Text
 import Database.Persist (Entity, SelectOpt(..), selectList, (<.), (==.))
 import Database.Persist.Sql
+import Protolude hiding (catch, get)
 import Schemas
 
 localConnString :: ConnectionString
