@@ -27,6 +27,8 @@ main = do
     compress :: Wai.Middleware
     compress = Wai.gzip Wai.def { Wai.gzipFiles = Wai.GzipCompress }
 
+
+
 app :: Wai.Application
 app =
   Servant.serveWithContext (Proxy @ServerAPI)

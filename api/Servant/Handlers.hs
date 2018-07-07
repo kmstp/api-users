@@ -180,7 +180,3 @@ len [] = 0
 len (x:xs) = 1 + len(xs)
 @-}
 
-{-@
-head1 :: {xs : [a] | len xs >= 1} -> a
-@-}
-

@@ -60,7 +60,6 @@ dependencies:
 - aeson-qq
 - liquidhaskell
 - bytestring
-- selda-postgresql
 - cookie
 library:
   source-dirs: src
@@ -68,7 +67,22 @@ default-extensions:
   - NoImplicitPrelude  
   - OverloadedStrings
   - FlexibleContexts
+  - TypeOperators
+  - LambdaCase
+  - DeriveGeneric
 executables:
+  searchengine-cli:
+    main:                Main.hs
+    source-dirs:         cli
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - searchengine
+    - optparse-generic
+    - selda-postgresql
+    - selda-sqlite
   searchengine-api:
     main:                Main.hs
     source-dirs:         api
