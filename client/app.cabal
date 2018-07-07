@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 31bb90ac3738f6b544b1b177bf1c099a7fc0b1b4abf13312f9e624c701aa36d6
+-- hash: 70d3a50a93c1f859c3c19db2a8dfddb6fbb8ac7866ed35ab8749762a7dc16a9b
 
 name:           app
 version:        0.1.0.0
@@ -33,6 +33,7 @@ executable app
         Common.SharedAPI
         Database
         GraphQL.Query
+        GraphQL.Request
         Lib
         MockBody
         Models.System

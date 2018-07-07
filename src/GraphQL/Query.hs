@@ -3,7 +3,8 @@
 {-# LANGUAGE TypeOperators #-}
 module GraphQL.Query
 ( RootQueryType
-, rootQuery)
+, rootQuery
+, HelloType)
 where
 import Data.Text
 import GraphQL

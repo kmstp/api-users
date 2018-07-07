@@ -57,11 +57,17 @@ dependencies:
 - lucid
 - graphql-api
 - protolude
+- aeson-qq
+- liquidhaskell
+- bytestring
+- selda-postgresql
+- cookie
 library:
   source-dirs: src
 default-extensions:
   - NoImplicitPrelude  
   - OverloadedStrings
+  - FlexibleContexts
 executables:
   searchengine-api:
     main:                Main.hs

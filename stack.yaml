@@ -45,6 +45,10 @@ extra-deps:
 - taggy-0.2.1
 - dotgen-0.4.2
 - miso-0.20.1.0
+- liquidhaskell-0.8.2.4
+- liquid-fixpoint-0.7.0.7
+- located-base-0.1.1.1
+- fgl-visualize-0.1.0.1
 # Override default flag values for local packages and extra-deps
 # flags: {}
 

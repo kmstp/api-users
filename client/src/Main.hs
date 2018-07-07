@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators #-}
 module Main where
@@ -11,11 +12,11 @@ import qualified Jwt
 import Miso (App(..), View)
 import qualified Miso
 import qualified Miso.String as Miso
+import Protolude
 import Servant.API ((:<|>)(..))
 import qualified Servant.API as Servant
 import qualified Servant.Utils.Links as Servant
 import System.IO (IO)
-import Protolude
 
 type (<-<) b a = a -> b
 infixl 0 <-<
@@ -33,14 +34,15 @@ main =
 
 updateModel
     :: Miso.Transition Common.Action Common.Model () <-< Common.Action
-updateModel action =
-    case action of
-        Common.NoOp          -> pure ()
-        Common.AddOne        -> Common.counterValue += 1
-        Common.SubtractOne   -> Common.counterValue -= 1
-        Common.ChangeURI uri ->
-          Miso.scheduleIO $ do
-            Miso.pushURI uri
-            Jwt.setJwtToken "test"
-            pure Common.NoOp
-        Common.HandleURIChange uri -> Common.uri .= uri
+updateModel = \case
+  Common.NoOp          -> pure ()
+  Common.AddOne        -> Common.counterValue += 1
+  Common.SubtractOne   -> Common.counterValue -= 1
+  Common.ChangeURI uri ->
+    Miso.scheduleIO $ do
+      Miso.pushURI uri
+      Jwt.setJwtToken "test"
+      pure Common.NoOp
+  Common.HandleURIChange uri -> Common.uri .= uri
+
+
