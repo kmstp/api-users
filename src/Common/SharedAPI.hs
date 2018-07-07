@@ -9,13 +9,13 @@ where
 import qualified Common
 import qualified Data.Text as T
 import qualified GraphQL as G
+import qualified GraphQL.Request as GR
 import qualified Lucid as L
 import qualified Lucid.Base as L
 import qualified Miso
 import Protolude
-import Servant ((:<|>)(..), (:>), Get, JSON, Raw, ReqBody, Post)
+import Servant ((:<|>)(..), (:>), AuthProtect, Get, JSON, Post, Raw, ReqBody)
 import Servant.Client.Core
-import qualified GraphQL.Request as GR
 
 -- | Represents the top level Html code. Its value represents the body of the
 -- page.
@@ -47,7 +47,7 @@ type ServerRoutes
 -- javascript file of the client.
 type ServerAPI =
        StaticAPI
-  :<|> GraphQLAPI
+  :<|>  GraphQLAPI
   :<|> (ServerRoutes
   :<|> Servant.Raw) -- This will show the 404 page for any unknown route
 
@@ -59,6 +59,7 @@ type GraphQLAPI = "graphql"
 -}
 
 type GraphQLAPI = "graphql"
-  :> Servant.ReqBody '[Servant.JSON] GR.Request 
+  :> Servant.AuthProtect "cookie-auth"
+  :> Servant.ReqBody '[Servant.JSON] GR.Request
   :> Servant.Post '[Servant.JSON] G.Response
 

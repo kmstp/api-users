@@ -4,6 +4,7 @@
 {-# LANGUAGE TypeOperators #-}
 module Main where
 
+import qualified Auth.AuthHandler as AAH
 import Common.SharedAPI (ServerAPI)
 import Data.Proxy (Proxy(..))
 import qualified Network.Wai as Wai
@@ -28,9 +29,10 @@ main = do
 
 app :: Wai.Application
 app =
-    Servant.serve (Proxy @ServerAPI)
-        (    staticHandlers
-        :<|> graphQLHandlers
-        :<|> serverHandlers
-        :<|> page404Handlers
-        )
+  Servant.serveWithContext (Proxy @ServerAPI)
+    AAH.genAuthServerContext
+    (    staticHandlers
+    :<|> graphQLHandlers
+    :<|> serverHandlers
+    :<|> page404Handlers
+    )

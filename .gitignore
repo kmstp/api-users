@@ -3,3 +3,5 @@ searchengine.cabal
 *~
 api/static/
 localpackages/
+node_modules/
+.liquid/
