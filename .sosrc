@@ -1,0 +1,10 @@
+- pattern: client/(.*)\.hs
+  commands: 
+  - stack build --stack-yaml=client/stack.yaml
+  - rm -f api/static/all.js
+  - cp $(stack path --stack-yaml=client/stack.yaml --local-install-root)/bin/app.jsexe/all.js api/static/app.js
+- pattern: api/(.*)\.hs
+  exclude: api/static
+  commands:
+  - stack build
+  - stack exec searchengine-api  

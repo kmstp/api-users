@@ -23,12 +23,14 @@ module Servant.Handlers
 where
 import qualified Auth.Auth as AA
 import qualified Common
-import Common.SharedAPI (GraphQLAPI, HtmlPage(..), ServerRoutes, StaticAPI)
+import Common.SharedAPI
+    (GraphQLAPI, HtmlPage(..), ServerAPI, ServerRoutes, StaticAPI)
 import qualified Data.Aeson as A
 import Data.Aeson.QQ (aesonQQ)
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Lazy.Char8 as C
 import qualified Data.Map as Map
+import Data.Proxy
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as E
 import qualified Data.Text.IO as TIO
@@ -36,20 +38,23 @@ import qualified Data.Text.Lazy as TL
 import qualified Data.Text.Lazy.Encoding as TLE
 import Data.Typeable
 import qualified GraphQL
+import GraphQL.API
 import qualified GraphQL.Internal.Execution as GIE
 import qualified GraphQL.Internal.Schema as GIS
 import qualified GraphQL.Internal.Syntax.AST as GSA
 import qualified GraphQL.Internal.Validation as GIV
 import GraphQL.Query (HelloType, RootQueryType, rootQuery)
 import qualified GraphQL.Request as GR
-import GraphQL.Value (FromValue(..), ToValue(..), makeName, variableValueToAST)
+import GraphQL.Resolver
+import GraphQL.Value hiding (Object)
+import GraphQL.Value.ToValue
 import qualified Lucid
 import qualified Miso
 import qualified Network.HTTP.Types as HTTP
 import qualified Network.Wai as Wai
 import qualified Prelude as P
 import Protolude
-import Servant ((:<|>)(..))
+import Servant ((:<|>)(..), safeLink)
 import qualified Servant
 
 type (<-<) b a = a -> b
@@ -57,6 +62,7 @@ infixl 0 <-<
 
 staticHandlers :: Servant.Server StaticAPI
 staticHandlers = Servant.serveDirectoryFileServer "api/static"
+
 
 serverHandlers :: Servant.Server ServerRoutes
 serverHandlers = homeServer :<|> flippedServer
@@ -69,6 +75,7 @@ graphQLHandlers = hello
           Just n  -> do
             liftIO $ Protolude.print ac
             liftIO $ Protolude.putStrLn n
+            liftIO $ Protolude.print (safeLink (Proxy::Proxy ServerAPI) (Proxy::Proxy GraphQLAPI))
             let Right schema = GraphQL.makeSchema @RootQueryType
                 -- Right query = GraphQL.compileQuery schema n
                 query = n
@@ -132,50 +139,21 @@ testHandlers = do
       y = toValue @Int32 10
   return ()
 
-sampleQuery = do
-      let query_ = "query ($whoVar: String!) {greeting(who: $whoVar)}"
-      schema <- GraphQL.makeSchema @RootQueryType
-      GraphQL.compileQuery schema query_
+type User1 = Object "User" '[] '[Field "name" Text]
+type Query1 = Object "Query" '[] '[Field "me" User1]
+
+user1 :: Handler IO User1
+user1 = pure name
+  where
+    name = pure "Mort"
+
+query1 :: Handler IO Query1
+query1 = pure user1
+
+sampleQuery :: IO GraphQL.Response
+sampleQuery = GraphQL.interpretAnonymousQuery @Query1 query1 "{ me { name} }"
       --Just z = decodeVariables variables_
   --Protolude.print $
   --  (fmap extractVariableDefinitionsFromOperation . extractValues =<< extractOperations)  cq_
   --Protolude.print $ typeOf $ fmap extractVariableDefinitionsFromOperation . extractValues
   --Protolude.print $ A.encode [aesonQQ| {whoVar: #{val_}} |]
-
-extractOperations :: [GIV.Operations a] <-< GIV.QueryDocument a
-extractOperations (GIV.MultipleOperations t)  =  [t]
-extractOperations _ = []
-
-extractOperation :: [GIV.Operation a] <-< GIV.QueryDocument a
-extractOperation (GIV.LoneAnonymousOperation t) = [t]
-extractOperation _ = []
-
-extractValues :: [GIV.Operation a] <-< GIV.Operations a
-extractValues = Map.elems
-
-extractVariableDefinitionsFromOperation :: GIV.VariableDefinitions <-< GIV.Operation a
-extractVariableDefinitionsFromOperation (GIV.Query x _ _) = x
-extractVariableDefinitionsFromOperation (GIV.Mutation x _ _) = x
-
-multipleOperations :: Bool <-< GIV.QueryDocument a
-multipleOperations (GIV.MultipleOperations _)  =  True
-multipleOperations _  =  False
-
-{-@ type Zero = {v :Int | v == 0} @-}
-{-@ type NonZero = {v:Int | v /= 0} @-}
-{-@ type Nat = { v: Int | v >= 0} @-}
-data Interval  = I
-  { _from :: Int
-  , _to   :: Int
-  } deriving (Show)
-{-@ data Interval = I
-       { _from :: Nat
-       , _to   :: {v: Nat | _from < v }
-    }
-@-}
-
-{-@
-measure len :: [a] -> Int
-len [] = 0
-len (x:xs) = 1 + len(xs)
-@-}

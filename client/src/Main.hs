@@ -4,6 +4,7 @@
 {-# LANGUAGE TypeOperators #-}
 module Main where
 
+import ClientAPI
 import qualified Common
 import qualified Common.Button as B
 import Control.Lens (makeLenses, (+=), (-=), (.=), (^.))
@@ -15,7 +16,7 @@ import qualified Miso.String as Miso
 import Protolude
 import Servant.API ((:<|>)(..))
 import qualified Servant.API as Servant
-import qualified Servant.Utils.Links as Servant
+import qualified Servant.Links as Servant
 import System.IO (IO)
 
 type (<-<) b a = a -> b

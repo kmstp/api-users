@@ -4,9 +4,16 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Common.SharedAPI
+module Common.SharedAPI(
+  GraphQLAPI
+, HtmlPage(..)
+, ServerRoutes
+, StaticAPI
+, ServerAPI
+)
 where
 import qualified Common
+import Common.RestAPI
 import qualified Data.Text as T
 import qualified GraphQL as G
 import qualified GraphQL.Request as GR
@@ -14,9 +21,8 @@ import qualified Lucid as L
 import qualified Lucid.Base as L
 import qualified Miso
 import Protolude
-import Servant ((:<|>)(..), (:>), AuthProtect, Get, JSON, Post, Raw, ReqBody)
-import Servant.Client.Core
-
+import Servant.API
+    ((:<|>)(..), (:>), AuthProtect, Get, JSON, Post, Raw, ReqBody)
 -- | Represents the top level Html code. Its value represents the body of the
 -- page.
 newtype HtmlPage a = HtmlPage a
@@ -47,11 +53,12 @@ type ServerRoutes
 -- javascript file of the client.
 type ServerAPI =
        StaticAPI
-  :<|>  GraphQLAPI
+  :<|> GraphQLAPI
+--  :<|> RestAPI
   :<|> (ServerRoutes
-  :<|> Servant.Raw) -- This will show the 404 page for any unknown route
+  :<|> Raw) -- This will show the 404 page for any unknown route
 
-type StaticAPI = "static" :> Servant.Raw
+type StaticAPI = "static" :> Raw
 {-
 type GraphQLAPI = "graphql"
   :> Servant.QueryParam "query" T.Text
@@ -59,7 +66,6 @@ type GraphQLAPI = "graphql"
 -}
 
 type GraphQLAPI = "graphql"
-  :> Servant.AuthProtect "cookie-auth"
-  :> Servant.ReqBody '[Servant.JSON] GR.Request
-  :> Servant.Post '[Servant.JSON] G.Response
-
+  :> AuthProtect "cookie-auth"
+  :> ReqBody '[JSON] GR.Request
+  :> Post '[JSON] G.Response
