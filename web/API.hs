@@ -22,7 +22,7 @@ import Database.Persist (Entity, Key)
 import Database.Persist.Postgresql (ConnectionString)
 import GraphQL
 import GraphQL.Query
-import GraphQL.Value (toValue)
+import GraphQL.Value
 import Lucid
 import Network.Wai.Handler.Warp
     (defaultSettings, runSettings, setLogger, setPort)

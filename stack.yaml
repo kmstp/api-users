@@ -35,7 +35,6 @@ resolver: lts-11.15
 #  - wai
 packages:
 - .
-- localpackages/graphql-api
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
@@ -49,6 +48,7 @@ extra-deps:
 - liquid-fixpoint-0.7.0.7
 - located-base-0.1.1.1
 - fgl-visualize-0.1.0.1
+- graphql-api-0.3.0
 # Override default flag values for local packages and extra-deps
 # flags: {}
 

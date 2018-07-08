@@ -1,12 +1,38 @@
 resolver: lts-7.19
 compiler: ghcjs-0.2.1.9007019_ghc-8.0.1
 compiler-check: match-exact # Be sure you also have this line in ~/.stack/config.yaml (match-minor also works for either/both)
-
+allow-newer: true
 packages:
  - '.'
+ - ../localpackages/servant/servant
+ - ../localpackages/servant/servant-client-core
+ - ../localpackages/servant/servant-client-ghcjs
+ - ../localpackages/ghcjs-base
 extra-deps: 
-- miso-0.20.1.0
+- miso-0.21.1.0
 - jsaddle-0.9.5.0
+- base-compat-0.10.4
+- exceptions-0.10.0
+- free-5.1
+- generics-sop-0.3.2.0
+- http-api-data-0.3.8.1
+- http-media-0.7.1.2
+- http-types-0.12.1
+- safe-0.3.17
+- text-1.2.3.0
+- aeson-1.4.0.0
+- attoparsec-0.13.2.2
+- attoparsec-iso8601-1.0.0.0
+- cabal-doctest-1.0.6
+- case-insensitive-1.2.0.11
+- mmorph-1.1.2
+- natural-transformation-0.4
+- singleton-bool-0.1.4
+- vault-0.3.1.1
+- th-abstraction-0.2.8.0
+- graphql-api-0.3.0
+- ghcjs-ajax-0.2.0.0
+- selda-0.2.0.0
 setup-info:
   ghcjs:
     source:

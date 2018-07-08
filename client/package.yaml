@@ -33,3 +33,23 @@ executables:
         - jsaddle
         - ghcjs-base
         - protolude
+        - aeson
+        - servant-client-core
+        - servant-client-ghcjs
+        - lucid
+        - graphql-api        
+        - unordered-containers
+        - vector
+        - scientific
+        - deepseq
+        - ghc-prim
+        - ghcjs-prim
+        - attoparsec
+        - containers
+        - dlist
+        - hashable
+        - tagged
+        - text
+        - time
+        - ghcjs-ajax
+        - selda

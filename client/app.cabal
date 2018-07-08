@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 70d3a50a93c1f859c3c19db2a8dfddb6fbb8ac7866ed35ab8749762a7dc16a9b
+-- hash: f6e3edaff0419bdaad2a94ada7e31951a0ca39cff3eedfa8de2a8d7b37cf735e
 
 name:           app
 version:        0.1.0.0
@@ -25,13 +25,19 @@ executable app
   else
     other-modules:
         Button
+        ClientAPI
         Jwt
         Main
         Aggregate
         Common
         Common.Button
+        Common.Params
+        Common.RestAPI
+        Common.Serialization
         Common.SharedAPI
         Database
+        Database.Models
+        Database.Queries
         GraphQL.Query
         GraphQL.Request
         Lib
@@ -45,15 +51,34 @@ executable app
         src
         ../src
     build-depends:
-        base <5
+        aeson
+      , attoparsec
+      , base <5
+      , containers
+      , deepseq
+      , dlist
+      , ghc-prim
+      , ghcjs-ajax
       , ghcjs-base
+      , ghcjs-prim
+      , graphql-api
+      , hashable
       , jsaddle
       , lens
+      , lucid
       , miso
       , mtl
       , network-uri
       , protolude
+      , scientific
+      , selda
       , servant
+      , servant-client-core
+      , servant-client-ghcjs
+      , tagged
       , text
+      , time
       , transformers
+      , unordered-containers
+      , vector
   default-language: Haskell2010
