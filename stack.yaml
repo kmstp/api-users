@@ -39,6 +39,7 @@ packages:
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
 # extra-deps: []
+allow-newer: true
 extra-deps:
 - taggy-lens-0.1.2
 - taggy-0.2.1
@@ -49,6 +50,9 @@ extra-deps:
 - located-base-0.1.1.1
 - fgl-visualize-0.1.0.1
 - graphql-api-0.3.0
+- Crypto-4.2.5.1
+- either-5.0.1
+
 # Override default flag values for local packages and extra-deps
 # flags: {}
 

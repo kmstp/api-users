@@ -2,10 +2,12 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Common.Serialization
 where
 
 import Data.Aeson
+import Data.Semigroup (mconcat, (<>))
 import Data.Text
 import qualified Database.Models as DM
 import Protolude
@@ -22,7 +24,7 @@ class Serialize a b | a -> b where
 
 instance Serialize (DM.Model DM.User) UserSerialized where
   serialize (DM.Model u) = UserSerialized {
-      userKey = (show . DM.userId $ u) <> "-" <> DM.userName u
+      userKey = mconcat [show . DM.userId $ u, "-", toLower $ DM.userName u]
     , userName = DM.userName u
     , age = DM.age u
     , pet = DM.pet u

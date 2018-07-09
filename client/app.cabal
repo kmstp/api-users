@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f6e3edaff0419bdaad2a94ada7e31951a0ca39cff3eedfa8de2a8d7b37cf735e
+-- hash: d95071f91cf29bd19bbc1b2b3cc19f829597be3cc2f515d7c2bc6d8ea1437cc3
 
 name:           app
 version:        0.1.0.0
@@ -30,12 +30,16 @@ executable app
         Main
         Aggregate
         Common
+        Common.AesonDecode
         Common.Button
+        Common.GraphQLAPI
         Common.Params
         Common.RestAPI
         Common.Serialization
         Common.SharedAPI
+        Common.Validation
         Database
+        Database.DSL
         Database.Models
         Database.Queries
         GraphQL.Query
@@ -51,17 +55,18 @@ executable app
         src
         ../src
     build-depends:
-        aeson
+        Crypto
+      , aeson
       , attoparsec
       , base <5
       , containers
+      , data-default-class
       , deepseq
       , dlist
       , ghc-prim
       , ghcjs-ajax
       , ghcjs-base
       , ghcjs-prim
-      , graphql-api
       , hashable
       , jsaddle
       , lens
@@ -72,6 +77,7 @@ executable app
       , protolude
       , scientific
       , selda
+      , semigroups
       , servant
       , servant-client-core
       , servant-client-ghcjs

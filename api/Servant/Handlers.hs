@@ -17,14 +17,16 @@ module Servant.Handlers
 , graphQLHandlers
 , page404Handlers
 , testHandlers
+, restHandlers
 )
 -}
 
 where
 import qualified Auth.Auth as AA
 import qualified Common
+import qualified Common.Serialization as CS
 import Common.SharedAPI
-    (GraphQLAPI, HtmlPage(..), ServerAPI, ServerRoutes, StaticAPI)
+    (GraphQLAPI, HtmlPage(..), RestAPI, ServerAPI, ServerRoutes, StaticAPI)
 import qualified Data.Aeson as A
 import Data.Aeson.QQ (aesonQQ)
 import qualified Data.ByteString.Lazy as BL
@@ -37,6 +39,8 @@ import qualified Data.Text.IO as TIO
 import qualified Data.Text.Lazy as TL
 import qualified Data.Text.Lazy.Encoding as TLE
 import Data.Typeable
+import qualified Database.DSL as DSL
+import qualified Database.Queries as DQ
 import qualified GraphQL
 import GraphQL.API
 import qualified GraphQL.Internal.Execution as GIE
@@ -60,9 +64,14 @@ import qualified Servant
 type (<-<) b a = a -> b
 infixl 0 <-<
 
+
+
 staticHandlers :: Servant.Server StaticAPI
 staticHandlers = Servant.serveDirectoryFileServer "api/static"
 
+restHandlers :: Servant.Server RestAPI
+restHandlers =
+   liftIO $ DSL.withDefaultBackend $ fmap CS.serialize <$> DQ.getPeopleUnderAge 50
 
 serverHandlers :: Servant.Server ServerRoutes
 serverHandlers = homeServer :<|> flippedServer

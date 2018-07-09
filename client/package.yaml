@@ -36,8 +36,7 @@ executables:
         - aeson
         - servant-client-core
         - servant-client-ghcjs
-        - lucid
-        - graphql-api        
+        - lucid     
         - unordered-containers
         - vector
         - scientific
@@ -53,3 +52,6 @@ executables:
         - time
         - ghcjs-ajax
         - selda
+        - Crypto
+        - data-default-class
+        - semigroups

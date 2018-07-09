@@ -61,7 +61,16 @@ dependencies:
 - liquidhaskell
 - bytestring
 - cookie
-
+- Crypto
+- either
+- haxl
+- hashable
+- async
+- lens-aeson
+- vector
+- data-default-class
+- selda-postgresql
+- selda-sqlite
 library:
   source-dirs: src
 default-extensions:
@@ -82,8 +91,6 @@ executables:
     dependencies:
     - searchengine
     - optparse-generic
-    - selda-postgresql
-    - selda-sqlite
   searchengine-api:
     main:                Main.hs
     source-dirs:         api

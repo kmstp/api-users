@@ -6,6 +6,7 @@ module Main where
 
 import ClientAPI
 import qualified Common
+import Common.AesonDecode
 import qualified Common.Button as B
 import Control.Lens (makeLenses, (+=), (-=), (.=), (^.))
 import Data.Proxy (Proxy(..))
@@ -16,6 +17,8 @@ import qualified Miso.String as Miso
 import Protolude
 import Servant.API ((:<|>)(..))
 import qualified Servant.API as Servant
+import Servant.Client.Core
+import Servant.Client.Ghcjs
 import qualified Servant.Links as Servant
 import System.IO (IO)
 
@@ -42,7 +45,8 @@ updateModel = \case
   Common.ChangeURI uri ->
     Miso.scheduleIO $ do
       Miso.pushURI uri
-      Jwt.setJwtToken "test"
+      ePos <- runClientM $ getUsers apiClient
+      print ePos
       pure Common.NoOp
   Common.HandleURIChange uri -> Common.uri .= uri
 

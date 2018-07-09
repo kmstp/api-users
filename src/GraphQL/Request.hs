@@ -13,3 +13,4 @@ data Request = Request {
 } deriving (Show, Generic)
 
 instance FromJSON Request
+instance ToJSON Request
