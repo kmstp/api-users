@@ -15,7 +15,12 @@ import Protolude
 import Servant ((:<|>)(..))
 import qualified Servant
 import Servant.Handlers
-    (graphQLHandlers, page404Handlers, serverHandlers, staticHandlers)
+    ( graphQLHandlers
+    , page404Handlers
+    , restHandlers
+    , serverHandlers
+    , staticHandlers
+    )
 import qualified System.IO as IO
 
 main :: IO ()
@@ -33,6 +38,7 @@ app =
     AAH.genAuthServerContext
     (    staticHandlers
     :<|> graphQLHandlers
+    :<|> restHandlers
     :<|> serverHandlers
     :<|> page404Handlers
     )

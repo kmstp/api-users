@@ -30,9 +30,9 @@ extra-deps:
 - singleton-bool-0.1.4
 - vault-0.3.1.1
 - th-abstraction-0.2.8.0
-- graphql-api-0.3.0
 - ghcjs-ajax-0.2.0.0
 - selda-0.2.0.0
+- Crypto-4.2.5.1
 setup-info:
   ghcjs:
     source:

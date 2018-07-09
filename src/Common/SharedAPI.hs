@@ -10,13 +10,13 @@ module Common.SharedAPI(
 , ServerRoutes
 , StaticAPI
 , ServerAPI
+, RestAPI
 )
 where
 import qualified Common
+import Common.GraphQLAPI
 import Common.RestAPI
 import qualified Data.Text as T
-import qualified GraphQL as G
-import qualified GraphQL.Request as GR
 import qualified Lucid as L
 import qualified Lucid.Base as L
 import qualified Miso
@@ -54,7 +54,7 @@ type ServerRoutes
 type ServerAPI =
        StaticAPI
   :<|> GraphQLAPI
---  :<|> RestAPI
+  :<|> RestAPI
   :<|> (ServerRoutes
   :<|> Raw) -- This will show the 404 page for any unknown route
 
@@ -64,8 +64,10 @@ type GraphQLAPI = "graphql"
   :> Servant.QueryParam "query" T.Text
   :> Servant.Get '[Servant.JSON] G.Response
 -}
-
+{-
 type GraphQLAPI = "graphql"
   :> AuthProtect "cookie-auth"
   :> ReqBody '[JSON] GR.Request
   :> Post '[JSON] G.Response
+
+-}
