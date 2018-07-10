@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d95071f91cf29bd19bbc1b2b3cc19f829597be3cc2f515d7c2bc6d8ea1437cc3
+-- hash: 5a9f58f8e3c3beea186020d25fe0b3eb1dccd25005339e9c91cc8d327946a67b
 
 name:           app
 version:        0.1.0.0
@@ -28,6 +28,7 @@ executable app
         ClientAPI
         Jwt
         Main
+        Users
         Aggregate
         Common
         Common.AesonDecode
