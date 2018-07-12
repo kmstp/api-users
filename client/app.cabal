@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5a9f58f8e3c3beea186020d25fe0b3eb1dccd25005339e9c91cc8d327946a67b
+-- hash: 8ff328ac74f146cd3294bab94a0afe8cedafa1a1f7959825e1ff9af5d1f06f81
 
 name:           app
 version:        0.1.0.0
@@ -39,6 +39,7 @@ executable app
         Common.Serialization
         Common.SharedAPI
         Common.Validation
+        Common.Views.Users
         Database
         Database.DSL
         Database.Models

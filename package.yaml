@@ -71,6 +71,7 @@ dependencies:
 - selda-postgresql
 - selda-sqlite
 - madlang
+- jsaddle
 library:
   source-dirs: src
 default-extensions:

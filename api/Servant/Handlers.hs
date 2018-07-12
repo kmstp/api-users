@@ -27,6 +27,7 @@ import qualified Common
 import qualified Common.Serialization as CS
 import Common.SharedAPI
     (GraphQLAPI, HtmlPage(..), RestAPI, ServerAPI, ServerRoutes, StaticAPI)
+import Control.Lens
 import qualified Data.Aeson as A
 import Data.Aeson.QQ (aesonQQ)
 import qualified Data.ByteString.Lazy as BL
@@ -111,10 +112,12 @@ decodeVariables vars = A.decode (TLE.encodeUtf8 vars)
 -- Servant.Server (ToServerRoutes Common.Home HtmlPage Common.Action)
 -- Handles the route for the home page, rendering Common.homeView.
 homeServer :: Servant.Handler (HtmlPage (Miso.View Common.Action))
-homeServer =
+homeServer = do
+    users_ <- liftIO $ DSL.withDefaultBackend $ fmap CS.serialize <$> DQ.getPeopleUnderAge 50
     pure $ HtmlPage $
-      Common.viewModel $
-      Common.initialModel Common.homeLink
+      Common.viewModel (modelWithData users_)
+      where
+        modelWithData us = Common.initialModel Common.homeLink & Common.users .~ us
 
 -- Alternative type:
 -- Servant.Server (ToServerRoutes Common.Flipped HtmlPage Common.Action)

@@ -52,6 +52,8 @@ extra-deps:
 - Crypto-4.2.5.1
 - either-5.0.1
 - cli-setup-0.2.0.4
+- jsaddle-0.9.5.0
+- ref-tf-0.4.0.1
 # Override default flag values for local packages and extra-deps
 # flags: {}
 
