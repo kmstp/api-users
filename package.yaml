@@ -20,7 +20,7 @@ extra-source-files:
 description:         Please see the README on GitHub at <https://github.com/checkraiser/searchengine#readme>
 
 dependencies:
-- base >= 4.7 && < 5
+- base >= 4.11 && < 5
 - lens-aeson
 - bytestring
 - text
@@ -58,7 +58,6 @@ dependencies:
 - graphql-api
 - protolude
 - aeson-qq
-- liquidhaskell
 - bytestring
 - cookie
 - Crypto
@@ -71,6 +70,8 @@ dependencies:
 - data-default-class
 - selda-postgresql
 - selda-sqlite
+- madlang
+- jsaddle
 library:
   source-dirs: src
 default-extensions:

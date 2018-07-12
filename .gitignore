@@ -5,3 +5,4 @@ api/static/app.js
 localpackages/
 node_modules/
 .liquid/
+dist-newstyle/

@@ -14,6 +14,8 @@ import qualified Servant.API as Servant
 import qualified Servant.Utils.Links as Servant
 #endif
 import qualified Common.Button as B
+import qualified Common.Serialization as CS
+import Common.Views.Users
 import qualified Data.Text as T
 import Miso (View)
 import qualified Miso
@@ -22,15 +24,15 @@ import qualified Miso.String as Miso
 import qualified Network.URI as Network
 import Protolude
 
-
 data Model
    = Model
      { _uri          :: !Network.URI
      , _counterValue :: !Int
      , _name         :: !T.Text
      , _mLeftButton  :: !B.Model
+     , _users        :: [CS.UserSerialized]
      }
-     deriving (Eq)
+    deriving (Eq)
 
 initialModel :: Network.URI -> Model
 initialModel uri =
@@ -39,6 +41,7 @@ initialModel uri =
     , _counterValue = 0
     , _name = "Dung"
     , _mLeftButton  = B.initialModel "Welcome, substract me"
+    , _users = []
     }
 
 data Action
@@ -86,6 +89,7 @@ homeView m =
         , button_ [ onClick AddOne ] [ text "+" ]
         ]
       , button_ [ onClick $ ChangeURI flippedLink ] [ text "Go to /flipped" ]
+      , renderUsers $ m ^. users
       ]
 
 -- View function of the Home route

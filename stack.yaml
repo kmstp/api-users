@@ -35,24 +35,25 @@ resolver: lts-11.15
 #  - wai
 packages:
 - .
+- location: localpackages/madlang
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
 # extra-deps: []
 allow-newer: true
 extra-deps:
+- base-4.11.1.0
 - taggy-lens-0.1.2
 - taggy-0.2.1
 - dotgen-0.4.2
-- miso-0.20.1.0
-- liquidhaskell-0.8.2.4
-- liquid-fixpoint-0.7.0.7
-- located-base-0.1.1.1
+- miso-0.21.1.0
 - fgl-visualize-0.1.0.1
 - graphql-api-0.3.0
 - Crypto-4.2.5.1
 - either-5.0.1
-
+- cli-setup-0.2.0.4
+- jsaddle-0.9.5.0
+- ref-tf-0.4.0.1
 # Override default flag values for local packages and extra-deps
 # flags: {}
 

@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d95071f91cf29bd19bbc1b2b3cc19f829597be3cc2f515d7c2bc6d8ea1437cc3
+-- hash: 8ff328ac74f146cd3294bab94a0afe8cedafa1a1f7959825e1ff9af5d1f06f81
 
 name:           app
 version:        0.1.0.0
@@ -28,6 +28,7 @@ executable app
         ClientAPI
         Jwt
         Main
+        Users
         Aggregate
         Common
         Common.AesonDecode
@@ -38,6 +39,7 @@ executable app
         Common.Serialization
         Common.SharedAPI
         Common.Validation
+        Common.Views.Users
         Database
         Database.DSL
         Database.Models
