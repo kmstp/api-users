@@ -1,6 +1,5 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators #-}
 module Main where
 
@@ -22,8 +21,6 @@ import Servant.Client.Ghcjs
 import qualified Servant.Links as Servant
 import System.IO (IO)
 
-type (<-<) b a = a -> b
-infixl 0 <-<
 main :: IO ()
 main =
   Miso.miso $ \currentURI -> App
@@ -37,17 +34,19 @@ main =
     }
 
 updateModel
-    :: Miso.Transition Common.Action Common.Model () <-< Common.Action
+    :: Common.Action -> Miso.Transition Common.Action Common.Model ()
 updateModel = \case
-  Common.NoOp          -> pure ()
-  Common.AddOne        -> Common.counterValue += 1
-  Common.SubtractOne   -> Common.counterValue -= 1
-  Common.ChangeURI uri ->
+  Common.NoOp             -> pure ()
+  Common.UpdateUsers us   -> Common.users .= us
+  Common.AddOne           -> Common.counterValue += 1
+  Common.SubtractOne      -> Common.counterValue -= 1
+  Common.ChangeURI uri    ->
     Miso.scheduleIO $ do
       Miso.pushURI uri
       ePos <- runClientM $ getUsers apiClient
-      print ePos
-      pure Common.NoOp
+      case ePos of
+        Right users -> pure $ Common.UpdateUsers users
+        Left _      -> pure Common.NoOp
   Common.HandleURIChange uri -> Common.uri .= uri
 
 

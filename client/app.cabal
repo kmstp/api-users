@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8ff328ac74f146cd3294bab94a0afe8cedafa1a1f7959825e1ff9af5d1f06f81
+-- hash: 3a8d663dd895cf56b78e242f72d8d00004bc968efad64ee2170cddfd0a082267
 
 name:           app
 version:        0.1.0.0
@@ -33,6 +33,7 @@ executable app
         Common
         Common.AesonDecode
         Common.Button
+        Common.Clay
         Common.GraphQLAPI
         Common.Params
         Common.RestAPI

@@ -21,6 +21,7 @@ import Servant.Handlers
     , serverHandlers
     , staticHandlers
     )
+import Servant.Handlers.CssHandlers
 import qualified System.IO as IO
 
 main :: IO ()
@@ -36,7 +37,8 @@ app :: Wai.Application
 app =
   Servant.serveWithContext (Proxy @ServerAPI)
     AAH.genAuthServerContext
-    (    staticHandlers
+    (    cssHandlers
+    :<|> staticHandlers
     :<|> graphQLHandlers
     :<|> restHandlers
     :<|> serverHandlers

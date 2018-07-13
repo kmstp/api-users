@@ -10,7 +10,7 @@
 -- `CSS` datatype.:
 --
 -- >>> type Eg = Get '[CSS] Css
-module Servant.Clay where
+module Common.Clay where
 
 import Clay (Css, compact, renderWith)
 import Data.Text.Lazy.Encoding (encodeUtf8)

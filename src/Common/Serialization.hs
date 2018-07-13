@@ -47,8 +47,8 @@ instance Serialize (DM.Model DM.User) UserSerialized where
 instance ToJSON UserSerialized
 instance FromJSON UserSerialized
 
-fields :: forall a . (Data a, Typeable a) => [Text]
-fields =  foldMap (fmap pack . constrFields) <$> dataTypeConstrs . dataTypeOf $ (undefined :: a)
+-- fields :: forall a . (Data a, Typeable a) => [Text]
+-- fields =  foldMap (fmap pack . constrFields) <$> dataTypeConstrs . dataTypeOf $ (undefined :: a)
 
 --getFields :: (Data a, Typeable a) => a -> [Text]
 --getFields  = fmap pack . constrFields . toConstr

@@ -51,6 +51,7 @@ data Action
   | ChangeURI !Network.URI
   | HandleURIChange !Network.URI
   | FetchMe
+  | UpdateUsers [CS.UserSerialized]
   deriving (Show, Eq)
 
 -- Holds a servant route tree of `View action`
@@ -63,6 +64,8 @@ type Home = View Action
 type Flipped = "flipped" :> View Action
 
 makeLenses ''Model
+
+
 
 -- Checks which URI is open and shows the appropriate view
 viewModel :: Model -> View Action
@@ -78,23 +81,70 @@ viewTree
        :<|> (Model -> View Action)
 viewTree = homeView :<|> flippedView
 
+headerLayout_ :: View Action
+headerLayout_ = header_
+  []
+  [ h1_
+    []
+    [ text "This is my branding" ]
+  , p_
+    []
+    [ text "Say something about website" ]
+  ]
+
+navMenu_ = nav_
+  []
+  [ ul_
+    []
+    [ li_
+      []
+      [ a_
+        [ onClick $ ChangeURI homeLink ] [ text "Home" ]
+      ]
+    , li_
+      []
+      [ a_
+        [ onClick $ ChangeURI flippedLink ] [ text "Flipped" ]
+      ]
+    ]
+  ]
+
+footer__ = footer_
+  []
+  [ p_
+    []
+    [ text "HyHy \169 2018" ]
+  ]
+
+withLayout_ content_ =
+  div_
+  []
+  [
+    headerLayout_
+    ,
+    navMenu_
+    ,
+    content_
+    ,
+    footer__
+  ]
 -- View function of the Home route
 homeView :: Model -> View Action
-homeView m =
-    div_ []
+homeView m = withLayout_ $
+      div_ []
       [ div_
-        []
-        [ button_ [ onClick SubtractOne ] [ text "-" ]
-        , text $ Miso.ms (show (_counterValue m) :: T.Text)
-        , button_ [ onClick AddOne ] [ text "+" ]
-        ]
-      , button_ [ onClick $ ChangeURI flippedLink ] [ text "Go to /flipped" ]
+          []
+          [ button_ [ onClick SubtractOne ] [ text "-" ]
+          , text $ Miso.ms (show (_counterValue m) :: T.Text)
+          , button_ [ onClick AddOne ] [ text "+" ]
+          ]
+      --, button_ [ onClick $ ChangeURI flippedLink ] [ text "Go to /flipped" ]
       , renderUsers $ m ^. users
       ]
 
 -- View function of the Home route
 flippedView :: Model -> View Action
-flippedView m =
+flippedView m = withLayout_ $
     div_ []
       [ div_
         []

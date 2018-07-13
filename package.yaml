@@ -72,6 +72,8 @@ dependencies:
 - selda-sqlite
 - madlang
 - jsaddle
+- http-media
+- clay
 library:
   source-dirs: src
 default-extensions:

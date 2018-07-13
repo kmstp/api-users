@@ -13,7 +13,9 @@ module Common.SharedAPI(
 , RestAPI
 )
 where
+import Clay
 import qualified Common
+import Common.Clay
 import Common.GraphQLAPI
 import Common.RestAPI
 import qualified Data.Text as T
@@ -35,6 +37,7 @@ instance L.ToHtml a => L.ToHtml (HtmlPage a) where
           L.head_ $ do
             L.title_ "Miso isomorphic example"
             L.meta_ [L.charset_ "utf-8"]
+            L.link_ [L.rel_ "stylesheet", L.type_ "text/css", L.href_ "/static/styles.css"]
 
             L.with (L.script_ mempty)
               [ L.makeAttribute "src" "/static/app.js"
@@ -52,12 +55,14 @@ type ServerRoutes
 -- The server serves static files besides the ServerRoutes, among which is the
 -- javascript file of the client.
 type ServerAPI =
-       StaticAPI
+       CssAPI
+  :<|> StaticAPI
   :<|> GraphQLAPI
   :<|> RestAPI
   :<|> (ServerRoutes
   :<|> Raw) -- This will show the 404 page for any unknown route
 
+type CssAPI = "static" :> "styles.css" :> Get '[CSS] Css
 type StaticAPI = "static" :> Raw
 {-
 type GraphQLAPI = "graphql"
