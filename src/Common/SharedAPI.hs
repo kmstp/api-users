@@ -10,14 +10,14 @@ module Common.SharedAPI(
 , ServerRoutes
 , StaticAPI
 , ServerAPI
-, RestAPI
+, IsoAPI
 )
 where
 import Clay
 import qualified Common
 import Common.Clay
 import Common.GraphQLAPI
-import Common.RestAPI
+import Common.IsoAPI
 import qualified Data.Text as T
 import qualified Lucid as L
 import qualified Lucid.Base as L
@@ -58,7 +58,7 @@ type ServerAPI =
        CssAPI
   :<|> StaticAPI
   :<|> GraphQLAPI
-  :<|> RestAPI
+  :<|> IsoAPI
   :<|> (ServerRoutes
   :<|> Raw) -- This will show the 404 page for any unknown route
 

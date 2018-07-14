@@ -33,6 +33,8 @@ extra-deps:
 - ghcjs-ajax-0.2.0.0
 - selda-0.2.0.0
 - Crypto-4.2.5.1
+- network-uri-json-0.1.2.1
+- servant-match-0.1.1
 setup-info:
   ghcjs:
     source:

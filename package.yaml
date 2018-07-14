@@ -74,6 +74,7 @@ dependencies:
 - jsaddle
 - http-media
 - clay
+- network-uri-json
 library:
   source-dirs: src
 default-extensions:
