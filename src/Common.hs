@@ -1,14 +1,15 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
-
 module Common where
 
-import Control.Lens
+import Control.Lens hiding ((.=))
 import Data.Proxy (Proxy(..))
-import Servant.API ((:<|>)(..), (:>))
+import Servant.API ((:<|>)(..), (:>), JSON)
 import qualified Servant.API as Servant
 #if MIN_VERSION_servant(0,10,0)
 import qualified Servant.Utils.Links as Servant
@@ -16,23 +17,40 @@ import qualified Servant.Utils.Links as Servant
 import qualified Common.Button as B
 import qualified Common.Serialization as CS
 import Common.Views.Users
+import Data.Aeson
 import qualified Data.Text as T
 import Miso (View)
 import qualified Miso
 import Miso.Html
 import qualified Miso.String as Miso
 import qualified Network.URI as Network
+import Network.URI.JSON
 import Protolude
+
+data HomeModel = HomeModel { _users :: [CS.UserSerialized], _headers :: [T.Text] }
+  deriving (Eq, Generic, Show, FromJSON, ToJSON)
+
+initialHomeModel = HomeModel { _users = [], _headers = ["User", "Name", "Age", "Pet"] }
+
+makeLenses ''HomeModel
+
+type UserList = [CS.UserSerialized]
+
+newtype SubModel = Home HomeModel
+  deriving (Show, Eq, Generic, FromJSON, ToJSON)
+
+makePrisms ''SubModel
 
 data Model
    = Model
      { _uri          :: !Network.URI
      , _counterValue :: !Int
      , _name         :: !T.Text
-     , _mLeftButton  :: !B.Model
-     , _users        :: [CS.UserSerialized]
+     , _model        :: !SubModel
      }
-    deriving (Eq)
+    deriving (Eq, Generic, Show, FromJSON, ToJSON)
+
+makeLenses ''Model
 
 initialModel :: Network.URI -> Model
 initialModel uri =
@@ -40,8 +58,7 @@ initialModel uri =
     { _uri = uri
     , _counterValue = 0
     , _name = "Dung"
-    , _mLeftButton  = B.initialModel "Welcome, substract me"
-    , _users = []
+    , _model = Home initialHomeModel
     }
 
 data Action
@@ -51,7 +68,7 @@ data Action
   | ChangeURI !Network.URI
   | HandleURIChange !Network.URI
   | FetchMe
-  | UpdateUsers [CS.UserSerialized]
+  | UpdateModel !SubModel
   deriving (Show, Eq)
 
 -- Holds a servant route tree of `View action`
@@ -62,9 +79,6 @@ type Home = View Action
 
 -- Flipped route, same as Home, but with the buttons flipped
 type Flipped = "flipped" :> View Action
-
-makeLenses ''Model
-
 
 
 -- Checks which URI is open and shows the appropriate view
@@ -139,7 +153,7 @@ homeView m = withLayout_ $
           , button_ [ onClick AddOne ] [ text "+" ]
           ]
       --, button_ [ onClick $ ChangeURI flippedLink ] [ text "Go to /flipped" ]
-      , renderUsers $ m ^. users
+      , renderUsers $ m ^. model ._Home . users
       ]
 
 -- View function of the Home route

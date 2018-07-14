@@ -26,12 +26,14 @@ import qualified Auth.Auth as AA
 import qualified Common
 import qualified Common.Serialization as CS
 import Common.SharedAPI
-    (GraphQLAPI, HtmlPage(..), RestAPI, ServerAPI, ServerRoutes, StaticAPI)
+    (GraphQLAPI, HtmlPage(..), IsoAPI, ServerAPI, ServerRoutes, StaticAPI)
 import Control.Lens
+import Control.Monad.Trans.Except (throwE)
 import qualified Data.Aeson as A
 import Data.Aeson.QQ (aesonQQ)
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString.Lazy.Char8 as C
+import Data.HashMap.Lazy as HL
 import qualified Data.Map as Map
 import Data.Proxy
 import qualified Data.Text as T
@@ -42,7 +44,7 @@ import qualified Data.Text.Lazy.Encoding as TLE
 import Data.Typeable
 import qualified Database.DSL as DSL
 import qualified Database.Queries as DQ
-import qualified GraphQL
+import qualified GraphQL as G
 import GraphQL.API
 import qualified GraphQL.Internal.Execution as GIE
 import qualified GraphQL.Internal.Schema as GIS
@@ -59,7 +61,7 @@ import qualified Network.HTTP.Types as HTTP
 import qualified Network.Wai as Wai
 import qualified Prelude as P
 import Protolude
-import Servant ((:<|>)(..), safeLink)
+import Servant ((:<|>)(..), err403, errBody, safeLink)
 import qualified Servant
 
 type (<-<) b a = a -> b
@@ -70,55 +72,66 @@ infixl 0 <-<
 staticHandlers :: Servant.Server StaticAPI
 staticHandlers = Servant.serveDirectoryFileServer "api/static"
 
-restHandlers :: Servant.Server RestAPI
-restHandlers =
-   liftIO $ DSL.withDefaultBackend $ fmap CS.serialize <$> DQ.getPeopleUnderAge 50
+restHandlers :: Servant.Server IsoAPI
+restHandlers = homeJSONServer
 
 serverHandlers :: Servant.Server ServerRoutes
 serverHandlers = homeServer :<|> flippedServer
 
 graphQLHandlers :: Servant.Server GraphQLAPI
-graphQLHandlers = hello
+graphQLHandlers = hello1
   where
-        hello ac mname = case handle (GR.query mname) of
-          Nothing -> GraphQL.interpretAnonymousQuery @RootQueryType (rootQuery "token") "{}"
+        hello1 Nothing _ = Servant.Handler $ throwE $ Servant.err401 { Servant.errBody = "Unauthorized" }
+        hello1 (Just x) mname | x /= "secret-code" = Servant.Handler $ throwE $ Servant.err401 { Servant.errBody = "Unauthorized" }
+        hello1 (Just "secret-code") mname = case handle (GR.query mname) of
+          Nothing -> G.interpretAnonymousQuery @RootQueryType (rootQuery "token") "{}"
           Just n  -> do
-            liftIO $ Protolude.print ac
             liftIO $ Protolude.putStrLn n
             liftIO $ Protolude.print (safeLink (Proxy::Proxy ServerAPI) (Proxy::Proxy GraphQLAPI))
-            let Right schema = GraphQL.makeSchema @RootQueryType
+            let Right schema = G.makeSchema @RootQueryType
                 -- Right query = GraphQL.compileQuery schema n
                 query = n
                 Right name = makeName "myQuery"
-                vars = Map.singleton (GSA.Variable "who") $ toValue @Text "Truong Dung"
-            liftIO $ print vars
-            liftIO $ print $ decodeVariables (GR.variables mname)
+                Just varMap = decodeVariables (GR.variables mname)
+                -- Just who = Map.lookup (T.pack "who") varMap
+                vars = Map.singleton (GSA.Variable "who") $ toValue @Text "Dung"
+            liftIO $ print  vars
+            liftIO $ print varMap
             --GraphQL.interpretAnonymousQuery @RootQueryType (rootQuery "token") n
-            GraphQL.interpretQuery @RootQueryType (rootQuery "token") query (Just name) vars
+            G.interpretQuery @RootQueryType (rootQuery "token") query (Just name) vars
         handle qname = if T.null qname
                        then Nothing
                        else Just qname
 
-decodeVariables :: Maybe A.Object <-< TL.Text
+decodeVariables :: TL.Text -> Maybe (Map Text A.Value)
 decodeVariables vars = A.decode (TLE.encodeUtf8 vars)
 
+
+convertLeft vname = GSA.Variable (Name { unName = vname })
+convertRight (String x) = toValue @Text x
+
+convertAeson :: A.Value -> Value
+convertAeson = undefined
   {-
   hello mname = return . HelloMessage $ case mname of
           Nothing -> "Hello, anonymous coward"
           Just n  -> "Hello, " <> n
 
   -}
+getHomeModel = do
+  users <- liftIO $ DSL.withDefaultBackend $ fmap CS.serialize <$> DQ.getPeopleUnderAge 50
+  pure $
+    Common.initialModel Common.homeLink
+    & Common.model
+    .~ (Common.Home $ Common.initialHomeModel & Common.users .~ users)
 -- Alternative type:
 -- Servant.Server (ToServerRoutes Common.Home HtmlPage Common.Action)
 -- Handles the route for the home page, rendering Common.homeView.
 homeServer :: Servant.Handler (HtmlPage (Miso.View Common.Action))
-homeServer = do
-    users_ <- liftIO $ DSL.withDefaultBackend $ fmap CS.serialize <$> DQ.getPeopleUnderAge 50
-    pure $ HtmlPage $
-      Common.viewModel (modelWithData users_)
-      where
-        modelWithData us = Common.initialModel Common.homeLink & Common.users .~ us
+homeServer = HtmlPage . Common.viewModel <$> getHomeModel
 
+homeJSONServer :: Servant.Handler Common.Model
+homeJSONServer = getHomeModel
 -- Alternative type:
 -- Servant.Server (ToServerRoutes Common.Flipped HtmlPage Common.Action)
 -- Renders the /flipped page.
@@ -136,36 +149,3 @@ page404 :: Wai.Application
 page404 _ respond = respond $ Wai.responseLBS
     HTTP.status404 [("Content-Type", "text/html")] $
     Lucid.renderBS $ Lucid.toHtml Common.page404View
-
-testHandlers :: IO ()
-testHandlers = do
-  let query_ = "query ($whoVar: String!) {greeting(who: $whoVar)}"
-      val_ = "test" :: T.Text
-      --variables_ = A.encode [aesonQQ| {who: #{val_}]} |] -- "{ \"who\": \"test\" }"
-      Right schema = GraphQL.makeSchema @RootQueryType
-      Right tn = makeName "UserType"
-      t_ = GIS.lookupType schema tn
-      Right cq_ = GraphQL.compileQuery schema query_
-      Right n = makeName "test"
-      x = GSA.Variable n
-      y = toValue @Int32 10
-  return ()
-
-type User1 = Object "User" '[] '[Field "name" Text]
-type Query1 = Object "Query" '[] '[Field "me" User1]
-
-user1 :: Handler IO User1
-user1 = pure name
-  where
-    name = pure "Mort"
-
-query1 :: Handler IO Query1
-query1 = pure user1
-
-sampleQuery :: IO GraphQL.Response
-sampleQuery = GraphQL.interpretAnonymousQuery @Query1 query1 "{ me { name} }"
-      --Just z = decodeVariables variables_
-  --Protolude.print $
-  --  (fmap extractVariableDefinitionsFromOperation . extractValues =<< extractOperations)  cq_
-  --Protolude.print $ typeOf $ fmap extractVariableDefinitionsFromOperation . extractValues
-  --Protolude.print $ A.encode [aesonQQ| {whoVar: #{val_}} |]

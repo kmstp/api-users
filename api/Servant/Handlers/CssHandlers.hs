@@ -4,6 +4,7 @@ where
 
 import Clay
 import Protolude
+import Servant.Clay
 import Servant.Server
 
 headerStyle :: Css

@@ -55,3 +55,5 @@ executables:
         - Crypto
         - data-default-class
         - semigroups
+        - network-uri-json
+        - servant-match

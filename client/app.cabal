@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3a8d663dd895cf56b78e242f72d8d00004bc968efad64ee2170cddfd0a082267
+-- hash: 14129eed977e7312aa7f991c905a3d9699ae8944efca36afddfb0a28496caaaf
 
 name:           app
 version:        0.1.0.0
@@ -28,15 +28,16 @@ executable app
         ClientAPI
         Jwt
         Main
-        Users
         Aggregate
         Common
+        Common.Actions.Home
         Common.AesonDecode
         Common.Button
         Common.Clay
         Common.GraphQLAPI
+        Common.IsoAPI
+        Common.Models.Home
         Common.Params
-        Common.RestAPI
         Common.Serialization
         Common.SharedAPI
         Common.Validation
@@ -77,6 +78,7 @@ executable app
       , miso
       , mtl
       , network-uri
+      , network-uri-json
       , protolude
       , scientific
       , selda
@@ -84,6 +86,7 @@ executable app
       , servant
       , servant-client-core
       , servant-client-ghcjs
+      , servant-match
       , tagged
       , text
       , time
